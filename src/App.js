@@ -7,6 +7,8 @@ import GoogleMapReact from 'google-map-react';
 
 function App() {
   const [flats, setFlats] = useState([]);
+  const [selectedFlat, setSelectedFlat] = useState(null);
+
 
   useEffect(() => {
     const url = "https://raw.githubusercontent.com/lewagon/flats-boilerplate/master/flats.json";
@@ -17,9 +19,21 @@ function App() {
       })
   });
 
-  const center = {
+  let center = {
     lat: 48.8566,
     lng: 2.3522
+  }
+
+  if (selectedFlat) {
+    center = {
+      lat: selectedFlat.lat,
+      lng: selectedFlat.lng
+    }
+  }
+
+  const selectFlat = (flat) => {
+    setSelectedFlat(flat)
+    console.log(selectedFlat);
   }
 
   return (
@@ -29,7 +43,10 @@ function App() {
         </div>
         <div className="flats">
           {flats.map((flat) => {
-            return <Flat flat={flat} />
+            return <Flat
+              key={flat.name}
+              flat={flat}
+              selectFlat={selectFlat} />
           })}
         </div>
       </div>
@@ -40,7 +57,12 @@ function App() {
             defaultZoom= {11}
             >
               {flats.map((flat) => {
-            return <Marker lat={flat.lat} lng={flat.lng} text={flat.price} />
+            return <Marker
+              key={flat.name}
+              lat={flat.lat}
+              lng={flat.lng}
+              text={flat.price}
+              selected={flat === selectedFlat} />
           })}
             </GoogleMapReact>
       </div>
