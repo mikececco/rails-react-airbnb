@@ -8,6 +8,7 @@ import GoogleMapReact from 'google-map-react';
 function App() {
   const [flats, setFlats] = useState([]);
   const [selectedFlat, setSelectedFlat] = useState(null);
+  const [search, setSearch] = useState('');
 
 
   useEffect(() => {
@@ -33,16 +34,21 @@ function App() {
 
   const selectFlat = (flat) => {
     setSelectedFlat(flat)
-    console.log(selectedFlat);
+  }
+
+  const handleSearch = (event) => {
+    setSearch(event.target.value);
+    setFlats(flats.filter((flat) => new RegExp(event.target.value, "i").exec(flat.name)))
   }
 
   return (
     <div className="app">
       <div className="main">
         <div className="search">
+          <input type="text" placeholder="Search" value={search} onChange={handleSearch} />
         </div>
         <div className="flats">
-          {flats.map((flat) => {
+        {flats.filter((flat) => new RegExp(search, "i").exec(flat.name)).map((flat) => {
             return <Flat
               key={flat.name}
               flat={flat}
